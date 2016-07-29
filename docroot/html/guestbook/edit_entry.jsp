@@ -2,12 +2,25 @@
 <%@ taglib uri="http://alloy.liferay.com/tld/aui" prefix="aui" %>
 <portlet:defineObjects />
 
-<aui:button-row cssClass="guestbook-buttons">
+<portlet:renderURL var="viewURL">
+    <portlet:param name="mvcPath" value="/html/guestbook/view.jsp"></portlet:param>
+</portlet:renderURL>
 
-    <portlet:renderURL var="addEntryURL">
-        <portlet:param name="mvcPath" value="/html/guestbook/edit_entry.jsp"></portlet:param>
-    </portlet:renderURL>
+<portlet:actionURL name="addEntry" var="addEntryURL"></portlet:actionURL>
 
-    <aui:button onClick="<%= addEntryURL.toString() %>" value="Add Entry"></aui:button>
+<aui:form action="<%= addEntryURL %>" name="<portlet:namespace />fm">
 
-</aui:button-row>
+        <aui:fieldset>
+
+            <aui:input name="name"></aui:input>
+            <aui:input name="message"></aui:input>
+
+        </aui:fieldset>
+
+        <aui:button-row>
+
+            <aui:button type="submit"></aui:button>
+            <aui:button type="cancel" onClick="<%= viewURL.toString() %>"></aui:button>
+
+        </aui:button-row>
+</aui:form>
