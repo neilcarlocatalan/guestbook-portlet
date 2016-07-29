@@ -1,1 +1,1 @@
-# Simple-Guest-Book-Porlet
+# Data-Driven-Guest-Book-Porlet
