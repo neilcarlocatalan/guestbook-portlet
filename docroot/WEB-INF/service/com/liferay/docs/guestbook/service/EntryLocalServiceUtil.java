@@ -357,6 +357,24 @@ public class EntryLocalServiceUtil {
 			serviceContext);
 	}
 
+	public static com.liferay.docs.guestbook.model.Entry deleteEntry(
+		long entryId, com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().deleteEntry(entryId, serviceContext);
+	}
+
+	public static com.liferay.docs.guestbook.model.Entry updateEntry(
+		long userId, long guestbookId, long entryId, java.lang.String name,
+		java.lang.String email, java.lang.String message,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .updateEntry(userId, guestbookId, entryId, name, email,
+			message, serviceContext);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

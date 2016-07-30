@@ -90,33 +90,81 @@ public class GuestbookPortlet extends MVCPortlet {
 	}
 	
 	public void addEntry(ActionRequest request, ActionResponse response)
-	        throws PortalException, SystemException {
+		       throws PortalException, SystemException {
 
-	    ServiceContext serviceContext = ServiceContextFactory.getInstance(
-	            Entry.class.getName(), request);
+		    ServiceContext serviceContext = ServiceContextFactory.getInstance(
+		         Entry.class.getName(), request);
 
-	    String userName = ParamUtil.getString(request, "name");
-	    String email = ParamUtil.getString(request, "email");
-	    String message = ParamUtil.getString(request, "message");
+		    String userName = ParamUtil.getString(request, "name");
+		    String email = ParamUtil.getString(request, "email");
+		    String message = ParamUtil.getString(request, "message");
+		    long guestbookId = ParamUtil.getLong(request, "guestbookId");
+		    long entryId = ParamUtil.getLong(request, "entryId");
+
+		    if (entryId > 0) {
+
+		       try {
+
+		         EntryLocalServiceUtil.updateEntry(serviceContext.getUserId(),
+		              guestbookId, entryId, userName, email, message,
+		              serviceContext);
+
+		         SessionMessages.add(request, "entryAdded");
+
+		         response.setRenderParameter("guestbookId",
+		              Long.toString(guestbookId));
+
+		       } catch (Exception e) {
+
+		         SessionErrors.add(request, e.getClass().getName());
+
+		                            PortalUtil.copyRequestParameters(request, response);
+
+		         response.setRenderParameter("mvcPath",
+		              "/html/guestbook/edit_entry.jsp");
+		       }
+
+		    }
+		            else {
+
+		       try {
+		         EntryLocalServiceUtil.addEntry(serviceContext.getUserId(),
+		              guestbookId, userName, email, message, serviceContext);
+
+		         SessionMessages.add(request, "entryAdded");
+
+		         response.setRenderParameter("guestbookId",
+		              Long.toString(guestbookId));
+
+		       } catch (Exception e) {
+		         SessionErrors.add(request, e.getClass().getName());
+
+		                            PortalUtil.copyRequestParameters(request, response);
+
+		         response.setRenderParameter("mvcPath",
+		              "/html/guestbook/edit_entry.jsp");
+		       }
+		    }
+
+		}
+	
+	public void deleteEntry (ActionRequest request, ActionResponse response) {
+
+	    long entryId = ParamUtil.getLong(request, "entryId");
 	    long guestbookId = ParamUtil.getLong(request, "guestbookId");
 
 	    try {
-	        EntryLocalServiceUtil.addEntry(serviceContext.getUserId(),
-	                guestbookId, userName, email, message, serviceContext);
 
-	        SessionMessages.add(request, "entryAdded");
+	       ServiceContext serviceContext = ServiceContextFactory.getInstance(
+	         Entry.class.getName(), request);
 
-	        response.setRenderParameter("guestbookId",
-	                Long.toString(guestbookId));
+	                    response.setRenderParameter("guestbookId", Long.toString(guestbookId));
+
+	       EntryLocalServiceUtil.deleteEntry(entryId, serviceContext);
 
 	    } catch (Exception e) {
-	        SessionErrors.add(request, e.getClass().getName());
 
-	        PortalUtil.copyRequestParameters(request, response);
-
-	        response.setRenderParameter("mvcPath",
-	                "/html/guestbook/edit_entry.jsp");
+	       SessionErrors.add(request, e.getClass().getName());
 	    }
-
 	}
 }
