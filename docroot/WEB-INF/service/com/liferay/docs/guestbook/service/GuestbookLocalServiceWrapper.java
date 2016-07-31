@@ -376,6 +376,32 @@ public class GuestbookLocalServiceWrapper implements GuestbookLocalService,
 		return _guestbookLocalService.addGuestbook(userId, name, serviceContext);
 	}
 
+	@Override
+	public com.liferay.docs.guestbook.model.Guestbook updateGuestbook(
+		long userId, long guestbookId, java.lang.String name,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _guestbookLocalService.updateGuestbook(userId, guestbookId,
+			name, serviceContext);
+	}
+
+	@Override
+	public com.liferay.docs.guestbook.model.Guestbook deleteGuestbook(
+		long guestbookId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _guestbookLocalService.deleteGuestbook(guestbookId,
+			serviceContext);
+	}
+
+	@Override
+	public int getGuestbooksCount(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _guestbookLocalService.getGuestbooksCount(groupId);
+	}
+
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
