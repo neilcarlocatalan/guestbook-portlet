@@ -24,6 +24,8 @@ import com.liferay.docs.guestbook.model.Entry;
 import com.liferay.docs.guestbook.service.base.EntryLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
@@ -94,6 +96,11 @@ public class EntryLocalServiceImpl extends EntryLocalServiceBaseImpl {
 	    resourceLocalService.addResources(user.getCompanyId(), groupId, userId,
 	    	       Entry.class.getName(), entryId, false, true, true);
 	    
+	    Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+                Entry.class);
+
+	    indexer.reindex(entry);
+	    
 	    return entry;
 
 	}
@@ -101,15 +108,20 @@ public class EntryLocalServiceImpl extends EntryLocalServiceBaseImpl {
 	public Entry deleteEntry(long entryId, ServiceContext serviceContext)
 		    throws PortalException, SystemException {
 
-		    Entry entry = getEntry(entryId);
+	    Entry entry = getEntry(entryId);
 
-		    resourceLocalService.deleteResource(
-		        serviceContext.getCompanyId(), Entry.class.getName(),
-		        ResourceConstants.SCOPE_INDIVIDUAL, entryId);
+	    resourceLocalService.deleteResource(
+	        serviceContext.getCompanyId(), Entry.class.getName(),
+	        ResourceConstants.SCOPE_INDIVIDUAL, entryId);
 
-		        entry = deleteEntry(entryId);
+        entry = deleteEntry(entryId);
+        
+        Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+                Entry.class);
 
-		        return entry;
+        indexer.delete(entry);
+
+        return entry;
 	}
 	
 	public Entry updateEntry(
@@ -141,6 +153,11 @@ public class EntryLocalServiceImpl extends EntryLocalServiceBaseImpl {
 	        user.getCompanyId(), groupId, Entry.class.getName(), entryId,
 	        serviceContext.getGroupPermissions(),
 	        serviceContext.getGuestPermissions());
+	    
+	    Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+                Entry.class);
+
+	    indexer.reindex(entry);
 
 	    return entry;
 	}
